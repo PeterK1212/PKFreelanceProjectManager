@@ -12,14 +12,9 @@ const Projects = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await axiosInstance.get(
-          '/api/projects',
-          {
-            headers: {
-              Authorization: `Bearer ${user.token}`,
-            },
-          }
-        );
+        const response = await axiosInstance.get('/api/projects', {
+            headers: { Authorization: `Bearer ${user.token}`, },
+          });
         setProjects(response.data);
       } catch (error) {
         alert('Failed to fetch projects.');
@@ -39,13 +34,9 @@ const Projects = () => {
         setEditingProject={setEditingProject}
       />
 
-      <ProjectList
-        projects={projects}
-        setProjects={setProjects}
-        setEditingProject={setEditingProject}
-      />
+      <ProjectList projects={projects} setProjects={setProjects} setEditingProject={setEditingProject} />
     </div>
   );
 };
 
-export default Projects;
+export default Projects
