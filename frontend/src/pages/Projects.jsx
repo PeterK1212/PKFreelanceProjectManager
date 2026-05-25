@@ -1,40 +1,51 @@
 import { useState, useEffect } from 'react';
 import axiosInstance from '../axiosConfig';
-import TaskForm from '../components/TaskForm';
-import TaskList from '../components/TaskList';
+import ProjectForm from '../components/ProjectForm';
+import ProjectList from '../components/ProjectList';
 import { useAuth } from '../context/AuthContext';
 
-const Tasks = () => {
+const Projects = () => {
   const { user } = useAuth();
-  const [tasks, setTasks] = useState([]);
-  const [editingTask, setEditingTask] = useState(null);
+  const [projects, setProjects] = useState([]);
+  const [editingProject, setEditingProject] = useState(null);
 
   useEffect(() => {
-    const fetchTasks = async () => {
+    const fetchProjects = async () => {
       try {
-        const response = await axiosInstance.get('/api/tasks', {
-          headers: { Authorization: `Bearer ${user.token}` },
-        });
-        setTasks(response.data);
+        const response = await axiosInstance.get(
+          '/api/projects',
+          {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+            },
+          }
+        );
+        setProjects(response.data);
       } catch (error) {
-        alert('Failed to fetch tasks.');
+        alert('Failed to fetch projects.');
       }
     };
 
-    fetchTasks();
+    fetchProjects();
   }, [user]);
 
   return (
+
     <div className="container mx-auto p-6">
-      <TaskForm
-        tasks={tasks}
-        setTasks={setTasks}
-        editingTask={editingTask}
-        setEditingTask={setEditingTask}
+      <ProjectForm
+        projects={projects}
+        setProjects={setProjects}
+        editingProject={editingProject}
+        setEditingProject={setEditingProject}
       />
-      <TaskList tasks={tasks} setTasks={setTasks} setEditingTask={setEditingTask} />
+
+      <ProjectList
+        projects={projects}
+        setProjects={setProjects}
+        setEditingProject={setEditingProject}
+      />
     </div>
   );
 };
 
-export default Tasks;
+export default Projects;
