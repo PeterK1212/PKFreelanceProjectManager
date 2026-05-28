@@ -41,6 +41,7 @@ const addProject = async (req, res) => {
     }
 };
 
+// Update user (freelancer) project (Jira FPM-14)
 const updateProject = async (req, res) => {
 
     const {
