@@ -89,6 +89,7 @@ const updateProject = async (req, res) => {
     }
 };
 
+// Delete user (freelancer) project (Jira FPM-18)
 const deleteProject = async (req, res) => {
 
     try {
