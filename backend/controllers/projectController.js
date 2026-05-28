@@ -1,5 +1,6 @@
 const Project = require('../models/Project');
 
+// View/Get user (freelancer) project (Jira FPM-10)
 const getProjects = async (req, res) => {
     try {
         const projects = await Project.find({ userId: req.user.id });
@@ -9,6 +10,7 @@ const getProjects = async (req, res) => {
     }
 };
 
+// Add/Create user (freelancer) project (Jira FPM-4)
 const addProject = async (req, res) => {
 
     const {
@@ -39,6 +41,7 @@ const addProject = async (req, res) => {
     }
 };
 
+// Update user (freelancer) project (Jira FPM-14)
 const updateProject = async (req, res) => {
 
     const {
@@ -86,6 +89,7 @@ const updateProject = async (req, res) => {
     }
 };
 
+// Delete user (freelancer) project (Jira FPM-18)
 const deleteProject = async (req, res) => {
 
     try {

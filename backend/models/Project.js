@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// Schema for user (freelancer) project data (Jira FPM-4)
 const projectSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,

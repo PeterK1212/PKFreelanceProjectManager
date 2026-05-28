@@ -7,7 +7,7 @@ import Tasks from './pages/Tasks';
 import Projects from './pages/Projects';
 import AdminDashboard from './pages/AdminDashboard';
 
-
+// Frontend for user (freelance) project panel (Jira FPM-4)
 function App() {
   return (
     <Router>

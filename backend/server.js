@@ -9,6 +9,7 @@ dotenv.config();
 
 const app = express();
 
+// Add user project API mapping it to projectRoutes (Jira FPM-4)
 app.use(cors());
 app.use(express.json());
 app.use('/api/auth', require('./routes/authRoutes'));
