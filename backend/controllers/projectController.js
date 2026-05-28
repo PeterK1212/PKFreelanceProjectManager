@@ -9,6 +9,7 @@ const getProjects = async (req, res) => {
     }
 };
 
+// Add/Create user (freelancer) project (Jira FPM-4)
 const addProject = async (req, res) => {
 
     const {

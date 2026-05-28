@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import axiosInstance from '../axiosConfig';
 
+// Frontend for user (freelance) project panel
+// Implment and test Add/Create method functionality (Jira FPM-4)
 const ProjectForm = ({ projects, setProjects, editingProject, setEditingProject }) => {
   const { user } = useAuth();
   const [formData, setFormData] = useState({ title: '', clientName: '', description: '', budget: '', status: 'Pending', deadline: '' });

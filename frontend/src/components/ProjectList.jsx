@@ -1,6 +1,8 @@
 import { useAuth } from '../context/AuthContext';
 import axiosInstance from '../axiosConfig';
 
+// Frontend for user (freelance) project panel
+// Implment and test Add/Create method functionality (Jira FPM-4)
 const ProjectList = ({ projects, setProjects, setEditingProject }) => {
   const { user } = useAuth();
 

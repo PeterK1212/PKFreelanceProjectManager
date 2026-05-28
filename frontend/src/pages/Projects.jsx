@@ -4,6 +4,8 @@ import ProjectForm from '../components/ProjectForm';
 import ProjectList from '../components/ProjectList';
 import { useAuth } from '../context/AuthContext';
 
+// Frontend for user (freelance) project panel
+// Implment and test Add/Create method functionality (Jira FPM-4)
 const Projects = () => {
   const { user } = useAuth();
   const [projects, setProjects] = useState([]);
