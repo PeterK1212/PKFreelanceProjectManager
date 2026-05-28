@@ -1,5 +1,6 @@
 const Project = require('../models/Project');
 
+// View/Get user (freelancer) project (Jira FPM-10)
 const getProjects = async (req, res) => {
     try {
         const projects = await Project.find({ userId: req.user.id });

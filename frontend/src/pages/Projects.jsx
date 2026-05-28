@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 
 // Frontend for user (freelance) project panel
 // Implment and test Add/Create method functionality (Jira FPM-4)
+// Implement and test View/Get method functionality (Jira FPM-10)
 const Projects = () => {
   const { user } = useAuth();
   const [projects, setProjects] = useState([]);

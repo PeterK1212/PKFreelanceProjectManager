@@ -4,6 +4,7 @@ import axiosInstance from '../axiosConfig';
 
 // Frontend for user (freelance) project panel
 // Implment and test Add/Create method functionality (Jira FPM-4)
+// Implement and test View/Get method functionality (Jira FPM-10)
 const ProjectForm = ({ projects, setProjects, editingProject, setEditingProject }) => {
   const { user } = useAuth();
   const [formData, setFormData] = useState({ title: '', clientName: '', description: '', budget: '', status: 'Pending', deadline: '' });

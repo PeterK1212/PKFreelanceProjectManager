@@ -1,6 +1,7 @@
 const express = require('express');
 
-// Add user project routes (Jira FPM-4)
+// Add/Create user project routes (Jira FPM-4)
+// View/Get user (freelancer) project (Jira FPM-10)
 const {
     getProjects,
     addProject,
