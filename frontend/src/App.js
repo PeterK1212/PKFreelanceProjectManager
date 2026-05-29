@@ -8,6 +8,7 @@ import Projects from './pages/Projects';
 import AdminDashboard from './pages/AdminDashboard';
 
 // Frontend for user (freelance) project panel (Jira FPM-4)
+// Frontend for Admin project panel (Jira FPM-22)
 function App() {
   return (
     <Router>
