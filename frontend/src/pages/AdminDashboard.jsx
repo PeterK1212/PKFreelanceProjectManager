@@ -3,6 +3,7 @@ import axiosInstance from '../axiosConfig';
 import { useAuth } from '../context/AuthContext';
 
 // Implement and test Admin View/Get projects method functionality (Jira FPM-22)
+// Implement and test Admin delete project method functionality (Jira FPM-30)
 const AdminDashboard = () => {
   const { user } = useAuth();
   const [projects, setProjects] = useState([]);

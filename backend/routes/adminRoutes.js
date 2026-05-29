@@ -1,6 +1,7 @@
 const express = require('express');
 
 // Admin View/Get projects route (Jira FPM-22)
+// Admin Delete project route (Jira FPM-30)
 const {
     //getAllUsers,
     getAllProjects,
