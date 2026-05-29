@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axiosInstance from '../axiosConfig';
 import { useAuth } from '../context/AuthContext';
 
+// Implement and test Admin View/Get projects method functionality (Jira FPM-22)
 const AdminDashboard = () => {
   const { user } = useAuth();
   const [projects, setProjects] = useState([]);

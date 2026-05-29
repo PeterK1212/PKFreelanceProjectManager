@@ -1,5 +1,6 @@
 const express = require('express');
 
+// Admin View/Get projects route (Jira FPM-22)
 const {
     //getAllUsers,
     getAllProjects,

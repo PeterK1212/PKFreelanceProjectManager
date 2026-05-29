@@ -17,6 +17,7 @@ const Project = require('../models/Project');
     }
 };*/
 
+// Admin View/Get projects (Jira FPM-22)
 const getAllProjects = async (req, res) => {
     try {
         const projects = await Project.find().populate('userId', 'name email');
