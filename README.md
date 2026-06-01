@@ -48,50 +48,50 @@ JIRA Board Link: https://myqut-connect-team.atlassian.net/jira/software/projects
 
 ## Prerequisites
 Install the following software and create the required accounts:
-* **Nodejs [**[https://nodejs.org/en](https://nodejs.org/en)]** **
-* **Git [**[https://git-scm.com/](https://git-scm.com/)]** **
-* **VS code editor** [[https://code.visualstudio.com/](https://code.visualstudio.com/)]** **
-* **MongoDB Account** [[https://account.mongodb.com/account/login](https://account.mongodb.com/account/login)]**
-* **GitHub Account** [[https://github.com/signup?source=login](https://github.com/signup?source=login)]** **
+- Nodejs https://nodejs.org/en
+- Git https://git-scm.com/
+- VS code editor https://code.visualstudio.com/
+- MongoDB Account https://account.mongodb.com/account/login
+- GitHub Account https://github.com/signup?source=login
 
 ---
 
 ## Installation and Setup
-1. Clone the Repository
-git clone https://github.com/PeterK1212/PKFreelanceProjectManager.git
+1. Clone the Repository  
+git clone https://github.com/PeterK1212/PKFreelanceProjectManager.git  
 cd PKFreelanceProjectManager
 
-2. Install Backend Dependencies
-cd backend
+2. Install Backend Dependencies  
+cd backend  
 npm install
 
-3. Configure Environment Variables
-Create a .env file inside the backend folder and add:
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
+3. Configure Environment Variables  
+Create a .env file inside the backend folder and add:  
+MONGO_URI=your_mongodb_connection_string  
+JWT_SECRET=your_jwt_secret  
 PORT=5001
 
-4. Install Frontend Dependencies
-cd frontend
+4. Install Frontend Dependencies  
+cd frontend  
 npm install
 
-5. Run the Backend Server
-cd backend
+5. Run the Backend Server  
+cd backend  
 npm start
 
-6. Run the Frontend Application
-cd frontend
+6. Run the Frontend Application  
+cd frontend  
 npm run dev
 
-7. Edit frontend axiosConfig.jsx baseURL to:
+7. Edit frontend axiosConfig.jsx baseURL to:  
 baseURL: 'http://localhost:5001'
 
-8. Open the Application
-Frontend:
-http://localhost:3000
-
-Backend API:
-http://localhost:5001
+8. Open the Application  
+Frontend:  
+http://localhost:3000  
+  
+Backend API:  
+http://localhost:5001  
 
 ---
 
