@@ -89,7 +89,6 @@ baseURL: 'http://localhost:5001'
 8. Open the Application  
 Frontend:  
 http://localhost:3000  
-  
 Backend API:  
 http://localhost:5001  
 
