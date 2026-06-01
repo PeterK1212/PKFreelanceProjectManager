@@ -12,7 +12,8 @@
 * Delete user/freelancer projects
 * Admin view projects
 * Admin delete projects
-
+* Add more sections here
+JIRA Board Link: https://myqut-connect-team.atlassian.net/jira/software/projects/FPM/boards/35
 ---
 
 **Prerequisite:** Please install the following software and create account in following web tools** **
