@@ -46,6 +46,7 @@ JIRA Board Link: https://myqut-connect-team.atlassian.net/jira/software/projects
 
 ---
 
+## Prerequisites
 Install the following software and create the required accounts:
 * **Nodejs [**[https://nodejs.org/en](https://nodejs.org/en)]** **
 * **Git [**[https://git-scm.com/](https://git-scm.com/)]** **
@@ -55,7 +56,7 @@ Install the following software and create the required accounts:
 
 ---
 
-### Installation and Setup
+## Installation and Setup
 1. Clone the Repository
 git clone https://github.com/PeterK1212/PKFreelanceProjectManager.git
 cd PKFreelanceProjectManager
@@ -101,13 +102,14 @@ http://3.26.196.206
 
 ## Test Credentials
 ### Admin Account
-Username/Email: peter.kok@connect.qut.edu.au
+Username/Email: peter.kok@connect.qut.edu.au  
 Password: Welcome1
 
 ### User Account
-Username/Email: test@test.com
+Username/Email: test@test.com  
 Password: Welcome1
 
 ---
+
 ### GitHub Repository
 https://github.com/PeterK1212/PKFreelanceProjectManager
