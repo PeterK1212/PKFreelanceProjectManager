@@ -1,5 +1,6 @@
 
 const User = require('../models/User');
+const UserFactory = require('../factories/UserFactory');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
@@ -8,12 +9,18 @@ const generateToken = (id) => {
 };
 
 const registerUser = async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
     try {
         const userExists = await User.findOne({ email });
         if (userExists) return res.status(400).json({ message: 'User already exists' });
 
-        const user = await User.create({ name, email, password });
+        // Factory pattern: build the role-specific user object, then persist.
+        // NOTE: `role` is taken from the request here only to demonstrate the
+        // factory branching. Allowing clients to self-register as 'admin' is a
+        // privilege-escalation risk and should be gated (admin-only route)
+        // before production use.
+        const newUser = UserFactory.create(role, { name, email, password });
+        const user = await User.create(newUser.buildPayload());
         res.status(201).json({ id: user.id, name: user.name, email: user.email, role: user.role, token: generateToken(user.id) });
     } catch (error) {
         res.status(500).json({ message: error.message });

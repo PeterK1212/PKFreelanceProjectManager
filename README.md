@@ -112,3 +112,38 @@ Password: Welcome1
 
 ### GitHub Repository
 https://github.com/PeterK1212/PKFreelanceProjectManager
+
+---
+
+## Architecture
+
+### Design Patterns
+
+The backend applies object-oriented design patterns to keep business logic clean and maintainable.
+
+#### Factory Pattern — User creation
+Centralises creation of role-specific user types (Admin vs Freelancer) so controllers
+no longer hardcode role logic during registration.
+
+- `backend/models/users/BaseUser.js` — base class holding common fields and `buildPayload()`
+- `backend/models/users/FreelancerUser.js` / `AdminUser.js` — subclasses that set the `role`
+- `backend/factories/UserFactory.js` — `UserFactory.create(type, data)` returns the matching user instance
+- `backend/controllers/authController.js` — `registerUser` builds the user via the factory before saving
+
+This also demonstrates **inheritance** (`AdminUser`/`FreelancerUser` extend `BaseUser`) and
+**polymorphism** (shared `buildPayload()`). Unit tests: `backend/test/factory_test.js` and
+`backend/test/auth_test.js` (run with `npm test` from the `backend` folder).
+
+### OOP Principles
+
+The design patterns above are implemented in a class-based style that demonstrates the four
+core object-oriented principles:
+
+- **Classes & Objects** — reusable classes such as `BaseUser`, `AdminUser`, `FreelancerUser`,
+  and `UserFactory` are instantiated where needed instead of writing procedural code.
+- **Encapsulation** — construction logic is hidden inside the classes; callers use
+  `UserFactory.create(...)` and `buildPayload()` without knowing the internal details.
+- **Inheritance** — `AdminUser` and `FreelancerUser` extend `BaseUser`, reusing common
+  fields and behaviour through the base class.
+- **Polymorphism** — subclasses share the same `buildPayload()` interface while producing
+  role-specific results.
