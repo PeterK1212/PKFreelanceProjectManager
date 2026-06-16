@@ -148,6 +148,21 @@ rule before any data operation runs, so the access-control logic lives in one pl
 This reinforces **encapsulation** (the access rule and data work are hidden behind a shared
 interface). Unit tests: `backend/test/proxy_test.js` (and `backend/test/admin_test.js`).
 
+#### Strategy Pattern — Project sorting (frontend)
+Lets the user sort the project list by Budget, Deadline, or Status at runtime. Each sort
+algorithm is an interchangeable strategy sharing a common interface, so the Projects page can
+switch behaviour without `if`/`switch` logic.
+
+- `frontend/src/strategies/SortStrategy.js` — base class defining the `sort(projects)` interface
+- `frontend/src/strategies/SortByBudget.js` / `SortByDeadline.js` / `SortByStatus.js` — concrete
+  strategies that each implement `sort()` differently
+- `frontend/src/strategies/index.js` — maps a dropdown key to the strategy instance (`sortStrategies`)
+- `frontend/src/pages/Projects.jsx` — selects a strategy from the dropdown and calls `strategy.sort()`
+
+This demonstrates **inheritance** (strategies extend `SortStrategy`) and **polymorphism** (shared
+`sort()` method, different algorithms). Unit tests: `frontend/src/strategies/strategies.test.js`
+(run with `npm test` from the `frontend` folder).
+
 ### OOP Principles
 
 The design patterns above are implemented in a class-based style that demonstrates the four
