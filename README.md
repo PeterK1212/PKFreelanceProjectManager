@@ -134,6 +134,20 @@ This also demonstrates **inheritance** (`AdminUser`/`FreelancerUser` extend `Bas
 **polymorphism** (shared `buildPayload()`). Unit tests: `backend/test/factory_test.js` and
 `backend/test/auth_test.js` (run with `npm test` from the `backend` folder).
 
+#### Proxy Pattern — Admin project access
+Provides controlled, role-based access to the sensitive admin operations (view all projects /
+delete any project). The proxy shares the real service's interface and enforces the admin-only
+rule before any data operation runs, so the access-control logic lives in one place.
+
+- `backend/services/ProjectService.js` — real subject; performs the actual `getAllProjects()` and
+  `deleteProject(id)` work against MongoDB with no access control
+- `backend/proxies/ProjectProxy.js` — proxy with the same interface; `ProjectProxy(user, service)`
+  rejects non-admin callers (`403`) before delegating to the real service
+- `backend/controllers/adminController.js` — `getAllProjects`/`deleteProject` go through the proxy
+
+This reinforces **encapsulation** (the access rule and data work are hidden behind a shared
+interface). Unit tests: `backend/test/proxy_test.js` (and `backend/test/admin_test.js`).
+
 ### OOP Principles
 
 The design patterns above are implemented in a class-based style that demonstrates the four
