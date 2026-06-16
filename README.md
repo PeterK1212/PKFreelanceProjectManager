@@ -163,6 +163,20 @@ This demonstrates **inheritance** (strategies extend `SortStrategy`) and **polym
 `sort()` method, different algorithms). Unit tests: `frontend/src/strategies/strategies.test.js`
 (run with `npm test` from the `frontend` folder).
 
+#### Decorator Pattern — Project display badges (frontend)
+Enhances project objects with computed display fields (`isOverdue`, `budgetLevel`) used to render
+status badges, without modifying the stored MongoDB project. Decorators wrap a project and can be
+stacked, each adding one field.
+
+- `frontend/src/decorators/ProjectDecorator.js` — base decorator exposing `getData()`; supports stacking
+- `frontend/src/decorators/OverdueDecorator.js` — adds `isOverdue` (past deadline and not completed)
+- `frontend/src/decorators/BudgetLevelDecorator.js` — adds `budgetLevel` (Low / Medium / High)
+- `frontend/src/decorators/index.js` — `decorateProject()` stacks the decorators onto a project
+- `frontend/src/components/ProjectList.jsx` — renders the computed badges from the decorated data
+
+This demonstrates **inheritance** (decorators extend `ProjectDecorator`) and **polymorphism** (shared
+`getData()`, different enrichments). Unit tests: `frontend/src/decorators/decorators.test.js`.
+
 ### OOP Principles
 
 The design patterns above are implemented in a class-based style that demonstrates the four
