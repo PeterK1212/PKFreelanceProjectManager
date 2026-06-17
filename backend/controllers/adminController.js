@@ -1,5 +1,5 @@
 //const User = require('../models/User');
-const Project = require('../models/Project');
+const ProjectProxy = require('../proxies/ProjectProxy');
 
 /*const getAllUsers = async (req, res) => {
 
@@ -18,13 +18,16 @@ const Project = require('../models/Project');
 };*/
 
 // Admin View/Get projects (Jira FPM-22)
+// Access is mediated by the Proxy pattern: ProjectProxy enforces the
+// admin-only rule before delegating to the real ProjectService.
 const getAllProjects = async (req, res) => {
     try {
-        const projects = await Project.find().populate('userId', 'name email');
+        const proxy = new ProjectProxy(req.user);
+        const projects = await proxy.getAllProjects();
         res.json(projects);
     } catch (error) {
 
-        res.status(500).json({
+        res.status(error.statusCode || 500).json({
             message: error.message,
         });
     }
@@ -57,9 +60,12 @@ const getAllProjects = async (req, res) => {
 };*/
 
 // Admin Delete project (Jira FPM-30)
+// Access is mediated by the Proxy pattern: ProjectProxy enforces the
+// admin-only rule before delegating to the real ProjectService.
 const deleteProject = async (req, res) => {
     try {
-        const project = await Project.findById(req.params.id);
+        const proxy = new ProjectProxy(req.user);
+        const project = await proxy.deleteProject(req.params.id);
 
         if (!project) {
             return res.status(404).json({
@@ -67,13 +73,11 @@ const deleteProject = async (req, res) => {
             });
         }
 
-        await project.deleteOne();
-
         res.json({
             message: 'Project deleted',
         });
     } catch (error) {
-        res.status(500).json({
+        res.status(error.statusCode || 500).json({
             message: error.message,
         });
     }

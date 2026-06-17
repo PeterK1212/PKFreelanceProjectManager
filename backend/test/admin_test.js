@@ -38,7 +38,7 @@ describe('Admin GetAllProjects Test', () => {
       populate: populateStub
     });
 
-    const req = {};
+    const req = { user: { role: 'admin' } };
 
     const res = {
       json: sinon.spy(),
@@ -68,7 +68,7 @@ describe('Admin GetAllProjects Test', () => {
       .stub(Project, 'find')
       .throws(new Error('DB Error'));
 
-    const req = {};
+    const req = { user: { role: 'admin' } };
 
     const res = {
       json: sinon.spy(),
@@ -96,6 +96,7 @@ describe('Admin DeleteProject Test', () => {
   it('should delete project successfully', async () => {
 
     const req = {
+      user: { role: 'admin' },
       params: {
         id: new mongoose.Types.ObjectId().toString()
       }
@@ -139,6 +140,7 @@ describe('Admin DeleteProject Test', () => {
       .resolves(null);
 
     const req = {
+      user: { role: 'admin' },
       params: {
         id: new mongoose.Types.ObjectId().toString()
       }
@@ -170,6 +172,7 @@ describe('Admin DeleteProject Test', () => {
       .throws(new Error('DB Error'));
 
     const req = {
+      user: { role: 'admin' },
       params: {
         id: new mongoose.Types.ObjectId().toString()
       }

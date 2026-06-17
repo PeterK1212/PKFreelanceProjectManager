@@ -134,6 +134,49 @@ This also demonstrates **inheritance** (`AdminUser`/`FreelancerUser` extend `Bas
 **polymorphism** (shared `buildPayload()`). Unit tests: `backend/test/factory_test.js` and
 `backend/test/auth_test.js` (run with `npm test` from the `backend` folder).
 
+#### Proxy Pattern — Admin project access
+Provides controlled, role-based access to the sensitive admin operations (view all projects /
+delete any project). The proxy shares the real service's interface and enforces the admin-only
+rule before any data operation runs, so the access-control logic lives in one place.
+
+- `backend/services/ProjectService.js` — real subject; performs the actual `getAllProjects()` and
+  `deleteProject(id)` work against MongoDB with no access control
+- `backend/proxies/ProjectProxy.js` — proxy with the same interface; `ProjectProxy(user, service)`
+  rejects non-admin callers (`403`) before delegating to the real service
+- `backend/controllers/adminController.js` — `getAllProjects`/`deleteProject` go through the proxy
+
+This reinforces **encapsulation** (the access rule and data work are hidden behind a shared
+interface). Unit tests: `backend/test/proxy_test.js` (and `backend/test/admin_test.js`).
+
+#### Strategy Pattern — Project sorting (frontend)
+Lets the user sort the project list by Budget, Deadline, or Status at runtime. Each sort
+algorithm is an interchangeable strategy sharing a common interface, so the Projects page can
+switch behaviour without `if`/`switch` logic.
+
+- `frontend/src/strategies/SortStrategy.js` — base class defining the `sort(projects)` interface
+- `frontend/src/strategies/SortByBudget.js` / `SortByDeadline.js` / `SortByStatus.js` — concrete
+  strategies that each implement `sort()` differently
+- `frontend/src/strategies/index.js` — maps a dropdown key to the strategy instance (`sortStrategies`)
+- `frontend/src/pages/Projects.jsx` — selects a strategy from the dropdown and calls `strategy.sort()`
+
+This demonstrates **inheritance** (strategies extend `SortStrategy`) and **polymorphism** (shared
+`sort()` method, different algorithms). Unit tests: `frontend/src/strategies/strategies.test.js`
+(run with `npm test` from the `frontend` folder).
+
+#### Decorator Pattern — Project display badges (frontend)
+Enhances project objects with computed display fields (`isOverdue`, `budgetLevel`) used to render
+status badges, without modifying the stored MongoDB project. Decorators wrap a project and can be
+stacked, each adding one field.
+
+- `frontend/src/decorators/ProjectDecorator.js` — base decorator exposing `getData()`; supports stacking
+- `frontend/src/decorators/OverdueDecorator.js` — adds `isOverdue` (past deadline and not completed)
+- `frontend/src/decorators/BudgetLevelDecorator.js` — adds `budgetLevel` (Low / Medium / High)
+- `frontend/src/decorators/index.js` — `decorateProject()` stacks the decorators onto a project
+- `frontend/src/components/ProjectList.jsx` — renders the computed badges from the decorated data
+
+This demonstrates **inheritance** (decorators extend `ProjectDecorator`) and **polymorphism** (shared
+`getData()`, different enrichments). Unit tests: `frontend/src/decorators/decorators.test.js`.
+
 ### OOP Principles
 
 The design patterns above are implemented in a class-based style that demonstrates the four
