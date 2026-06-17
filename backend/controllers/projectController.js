@@ -1,7 +1,5 @@
 const Project = require('../models/Project');
 
-const Project = require('../models/Project');
-
 // PK: Integrate Builder, Chain of Responsibility, and Observer design patterns.
 const ProjectBuilder =
     require('../builders/ProjectBuilder');
