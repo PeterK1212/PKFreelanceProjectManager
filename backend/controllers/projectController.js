@@ -123,10 +123,14 @@ const addProject = async (req, res) => {
 
     } catch (error) {
 
-        res.status(500).json({
-            message: error.message
-        });
+        //res.status(500).json({
+        //    message: error.message
+        //});
 
+        // PK: Bubble up error to front-end
+        res.status(400).json({
+        message: error.message
+        });
     }
 };
 
