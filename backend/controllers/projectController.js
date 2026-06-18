@@ -1,5 +1,36 @@
 const Project = require('../models/Project');
 
+// PK: Integrate Builder, Chain of Responsibility, and Observer design patterns.
+const ProjectBuilder =
+    require('../builders/ProjectBuilder');
+
+const ProjectSubject =
+    require('../observers/ProjectSubject');
+
+const LogObserver =
+    require('../observers/LogObserver');
+
+const AdminObserver =
+    require('../observers/AdminObserver');
+
+const TitleValidationHandler =
+    require('../handlers/TitleValidationHandler');
+
+const BudgetValidationHandler =
+    require('../handlers/BudgetValidationHandler');
+
+const DeadlineValidationHandler =
+    require('../handlers/DeadlineValidationHandler');
+
+// PK: Register Observer for project events (add, update, delete).
+ProjectSubject.subscribe(
+    new LogObserver()
+);
+
+ProjectSubject.subscribe(
+    new AdminObserver()
+);
+
 // View/Get user (freelancer) project (Jira FPM-10)
 const getProjects = async (req, res) => {
     try {
@@ -11,7 +42,7 @@ const getProjects = async (req, res) => {
 };
 
 // Add/Create user (freelancer) project (Jira FPM-4)
-const addProject = async (req, res) => {
+/*const addProject = async (req, res) => {
 
     const {
         title,
@@ -38,6 +69,64 @@ const addProject = async (req, res) => {
 
     } catch (error) {
         res.status(500).json({ message: error.message });
+    }
+};*/
+
+// PK: Integrate project Builder, Chain of Responsibility, and Observer design patterns.
+const addProject = async (req, res) => {
+
+    const {
+        title,
+        clientName,
+        description,
+        budget,
+        status,
+        deadline
+    } = req.body;
+
+    try {
+
+        const projectData =
+            new ProjectBuilder(req.user.id)
+                .setTitle(title)
+                .setClientName(clientName)
+                .setDescription(description)
+                .setBudget(budget)
+                .setStatus(status)
+                .setDeadline(deadline)
+                .build();
+
+        const titleValidator =
+            new TitleValidationHandler();
+
+        const budgetValidator =
+            new BudgetValidationHandler();
+
+        const deadlineValidator =
+            new DeadlineValidationHandler();
+
+        titleValidator
+            .setNext(budgetValidator)
+            .setNext(deadlineValidator);
+
+        titleValidator.handle(projectData);
+
+        const project =
+            await Project.create(projectData);
+
+        ProjectSubject.notify(
+            'PROJECT_CREATED',
+            project
+        );
+
+        res.status(201).json(project);
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: error.message
+        });
+
     }
 };
 
@@ -82,6 +171,12 @@ const updateProject = async (req, res) => {
 
         const updatedProject = await project.save();
 
+        // PK: Notify event for update project
+        ProjectSubject.notify(
+            'PROJECT_UPDATED',
+            updatedProject
+        );
+
         res.json(updatedProject);
 
     } catch (error) {
@@ -101,6 +196,12 @@ const deleteProject = async (req, res) => {
                 message: 'Project not found'
             });
         }
+
+        // PK: Notify event for delete project
+        ProjectSubject.notify(
+            'PROJECT_DELETED',
+            project
+        );
 
         await project.deleteOne();
 
