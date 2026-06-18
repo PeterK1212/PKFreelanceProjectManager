@@ -29,7 +29,7 @@ const ProjectForm = ({
     title: '',
     clientName: '',
     description: '',
-    budget: '',
+    budget: 0,
     status: 'Pending',
     deadline: ''
   });
@@ -61,7 +61,7 @@ const ProjectForm = ({
         title: '',
         clientName: '',
         description: '',
-        budget: '',
+        budget: 0,
         status: 'Pending',
         deadline: ''
       });
@@ -125,7 +125,7 @@ const ProjectForm = ({
         title: '',
         clientName: '',
         description: '',
-        budget: '',
+        budget: 0,
         status: 'Pending',
         deadline: ''
       });
