@@ -183,7 +183,7 @@ controller. This makes project creation easier to extend with additional attribu
 changing controller code.
 
 - `backend/builders/ProjectBuilder.js` — builder class providing chained methods
-(setTitle(), setClientName(), setDescription(), setBudget(), setStatus(), setDeadline()) and build()
+(`setTitle()`, `setClientName()`, `setDescription()`, `setBudget()`, `setStatus()`, `setDeadline()`) and `build()`
 - `backend/controllers/projectController.js` — addProject() uses ProjectBuilder to construct
 project objects before saving to MongoDB
 
@@ -194,26 +194,26 @@ creation through method chaining. Unit tests: `backend/test/builder_test.js`.
 Validates project data through a sequence of handlers before project creation. Each handler performs one 
 validation and passes control to the next handler if validation succeeds.
 
-- `backend/handlers/BaseHandler.js` — base handler defining setNext() and handle()
+- `backend/handlers/BaseHandler.js` — base handler defining `setNext()` and `handle()`
 - `backend/handlers/TitleValidationHandler.js` — validates that a project title exists
 - `backend/handlers/BudgetValidationHandler.js` — validates that budget values are valid
 - `backend/handlers/DeadlineValidationHandler.js` — validates that a deadline is provided
 - `backend/controllers/projectController.js` — builds and executes the validation chain before saving a project
 
-This demonstrates **inheritance** (all validation handlers extend BaseHandler) and **polymorphism** (all handlers
-implement the same handle() interface with different validation behaviour). Unit tests: `backend/test/chain_test.js`.
+This demonstrates **inheritance** (all validation handlers extend `BaseHandler`) and **polymorphism** (all handlers
+implement the same `handle()` interface with different validation behaviour). Unit tests: `backend/test/chain_test.js`.
 
 #### Observer Pattern — Project event notifications (backend)
 Notifies subscribed observers whenever a project is created, updated, or deleted. This separates 
 notification behaviour from project business logic.
 
-- `backend/observers/Observer.js` — abstract observer defining the update() interface
+- `backend/observers/Observer.js` — abstract observer defining the `update()` interface
 - `backend/observers/ProjectSubject.js` — manages observer subscriptions and dispatches notifications
 - `backend/observers/LogObserver.js` — logs project lifecycle events
 - `backend/observers/AdminObserver.js` — handles administrator notifications
 - `backend/controllers/projectController.js` — triggers notifications for project creation, update, and deletion events
 
-This demonstrates **inheritance** (observers extend Observer) and **polymorphism** (shared update() interface, different 
+This demonstrates **inheritance** (observers extend `Observer`) and **polymorphism** (shared `update()` interface, different 
 observer implementations). Unit tests: `backend/test/observer_test.js`.
 
 ### OOP Principles
