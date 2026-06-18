@@ -143,7 +143,13 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });"
+                  "pm.test('status is 200', function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test('returns profile fields', function () {",
+                  "  pm.expect(json).to.have.property('name');",
+                  "  pm.expect(json).to.have.property('email');",
+                  "  pm.expect(json).to.have.property('role');",
+                  "});"
                 ]
               }
             }
@@ -156,6 +162,31 @@
               "host": ["{{baseUrl}}"],
               "path": ["api", "auth", "profile"]
             }
+          }
+        },
+        {
+          "name": "Get Profile (no token → 401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 401 without a token', function () { pm.response.to.have.status(401); });",
+                  "pm.test('reports missing token', function () { pm.expect(pm.response.json().message).to.match(/not authorized/i); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "profile"]
+            },
+            "description": "Negative test for the `protect` middleware: a request with no Authorization header must be rejected with 401."
           }
         },
         {
@@ -342,6 +373,7 @@
                 "exec": [
                   "pm.test('status is 201', function () { pm.response.to.have.status(201); });",
                   "const json = pm.response.json();",
+                  "pm.test('returns an id', function () { pm.expect(json._id).to.be.a('string'); });",
                   "if (json._id) { pm.collectionVariables.set('taskId', json._id); }"
                 ]
               }
