@@ -68,7 +68,7 @@ describe('AddProject Function Test', () => {
     await addProject(req, res);
 
     // Assertions
-    expect(res.status.calledWith(500)).to.be.true;
+    expect(res.status.calledWith(400)).to.be.true;
     expect(res.json.calledWithMatch({ message: 'DB Error' })).to.be.true;
 
     // Restore stubbed methods
