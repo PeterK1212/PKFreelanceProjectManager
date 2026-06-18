@@ -177,16 +177,59 @@ stacked, each adding one field.
 This demonstrates **inheritance** (decorators extend `ProjectDecorator`) and **polymorphism** (shared
 `getData()`, different enrichments). Unit tests: `frontend/src/decorators/decorators.test.js`.
 
+#### Builder Pattern — Project creation (backend)
+Builds project objects step-by-step before persistence, separating project construction logic from the 
+controller. This makes project creation easier to extend with additional attributes in the future without
+changing controller code.
+
+- `backend/builders/ProjectBuilder.js` — builder class providing chained methods
+(setTitle(), setClientName(), setDescription(), setBudget(), setStatus(), setDeadline()) and build()
+- `backend/controllers/projectController.js` — addProject() uses ProjectBuilder to construct
+project objects before saving to MongoDB
+
+This demonstrates **encapsulation** (project construction logic is hidden inside the builder) and fluent object
+creation through method chaining. Unit tests: `backend/test/builder_test.js`.
+
+#### Chain of Responsibility Pattern — Project validation (backend and frontend)
+Validates project data through a sequence of handlers before project creation. Each handler performs one 
+validation and passes control to the next handler if validation succeeds.
+
+- `backend/handlers/BaseHandler.js` — base handler defining setNext() and handle()
+- `backend/handlers/TitleValidationHandler.js` — validates that a project title exists
+- `backend/handlers/BudgetValidationHandler.js` — validates that budget values are valid
+- `backend/handlers/DeadlineValidationHandler.js` — validates that a deadline is provided
+- `backend/controllers/projectController.js` — builds and executes the validation chain before saving a project
+
+This demonstrates **inheritance** (all validation handlers extend BaseHandler) and **polymorphism** (all handlers
+implement the same handle() interface with different validation behaviour). Unit tests: `backend/test/chain_test.js`.
+
+#### Observer Pattern — Project event notifications (backend)
+Notifies subscribed observers whenever a project is created, updated, or deleted. This separates 
+notification behaviour from project business logic.
+
+- `backend/observers/Observer.js` — abstract observer defining the update() interface
+- `backend/observers/ProjectSubject.js` — manages observer subscriptions and dispatches notifications
+- `backend/observers/LogObserver.js` — logs project lifecycle events
+- `backend/observers/AdminObserver.js` — handles administrator notifications
+- `backend/controllers/projectController.js` — triggers notifications for project creation, update, and deletion events
+
+This demonstrates **inheritance** (observers extend Observer) and **polymorphism** (shared update() interface, different 
+observer implementations). Unit tests: `backend/test/observer_test.js`.
+
 ### OOP Principles
 
 The design patterns above are implemented in a class-based style that demonstrates the four
 core object-oriented principles:
 
 - **Classes & Objects** — reusable classes such as `BaseUser`, `AdminUser`, `FreelancerUser`,
-  and `UserFactory` are instantiated where needed instead of writing procedural code.
-- **Encapsulation** — construction logic is hidden inside the classes; callers use
-  `UserFactory.create(...)` and `buildPayload()` without knowing the internal details.
-- **Inheritance** — `AdminUser` and `FreelancerUser` extend `BaseUser`, reusing common
-  fields and behaviour through the base class.
-- **Polymorphism** — subclasses share the same `buildPayload()` interface while producing
-  role-specific results.
+  `UserFactory`,  `ProjectBuilder`, `ProjectProxy`, `ProjectSubject`, `LogObserver`, `AdminObserver`, `SortStrategy`,
+  `ProjectDecorator`, and `validation handlers` are instantiated where needed instead of writing procedural code.
+- **Encapsulation** — implementation details are hidden inside classes; callers use methods such as `UserFactory.create(...)`, 
+  `ProjectBuilder.build()`, `ProjectProxy.getAllProjects()`, `ProjectSubject.notify()`, `ProjectDecorator.getData()`, and 
+  `validation handlers` without needing to know the underlying implementation.
+- **Inheritance** — `AdminUser and FreelancerUser` extend `BaseUser`; `sorting strategies` extend `SortStrategy`; 
+  `decorators` extend `ProjectDecorator`; `validation handlers` extend `BaseHandler`; and `observers` extend `Observer`,
+  reusing common fields and behaviour from the base class.
+- **Polymorphism** — multiple classes share common interfaces while providing different behaviour. Examples include 
+  `buildPayload()` in user classes, `sort()` in strategy classes, `getData()` in decorators, `handle()` in validation 
+  handlers, and `update()` in observers.
