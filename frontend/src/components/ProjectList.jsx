@@ -45,7 +45,10 @@ const ProjectList = ({ projects, setProjects, setEditingProject }) => {
           <p><strong>Description:</strong>{' '}{project.description}</p>
           <p><strong>Budget:</strong>{' '}${project.budget}</p>
           <p><strong>Status:</strong>{' '}{project.status}</p>
+          <p><strong>Deadline:</strong>{' '}{new Date(project.deadline).toLocaleDateString()}</p>
+          <!--
           <p className="text-sm text-gray-500">Deadline:{' '}{new Date(project.deadline).toLocaleDateString()}</p>
+          -->
           <div className="mt-2">
             <button
               onClick={() => setEditingProject(project)}
