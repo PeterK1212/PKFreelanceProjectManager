@@ -1,0 +1,66 @@
+name: PR Checks
+
+on:
+  pull_request  # Build & test every PR. No environment -> no deployment record.
+
+
+# Suppress Node deprecation warnings (e.g. punycode DEP0040) in the logs.
+env:
+  NODE_NO_WARNINGS: '1'
+
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Build & Test
+  # Builds the frontend first and runs its tests, then installs the backend and
+  # runs its tests. Checks out into an isolated path so it never touches the
+  # live deployment files on the self-hosted runner. No secrets are needed: the
+  # backend tests stub the DB and fall back to a test JWT secret.
+  # ---------------------------------------------------------------------------
+  build-and-test:
+    name: Build & Test
+    runs-on: self-hosted
+
+    strategy:
+      matrix:
+        node-version: [22]
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+      with:
+        path: ci-build
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    # --- Frontend: build first, then test ---
+    - name: Install Frontend Dependencies & Build
+      working-directory: ./ci-build/frontend
+      run: |
+        df -h
+        sudo rm -rf ./build
+        yarn install
+        yarn run build
+
+    - name: Run Frontend Tests
+      working-directory: ./ci-build/frontend
+      env:
+        CI: true
+      # --silent mutes test console output (act/router warnings); failures and
+      # the pass/fail summary still print.
+      run: yarn test --watchAll=false --silent
+
+    # --- Backend: install, then test ---
+    - name: Install Backend Dependencies
+      working-directory: ./ci-build/backend
+      run: |
+       npm install --global yarn
+       yarn --version
+       yarn install
+
+    - name: Run Backend Tests
+      working-directory: ./ci-build/backend
+      run: npm test

@@ -3,8 +3,7 @@ name: Backend CI
 on:
   push:
     branches:
-      - main  # Trigger CI on pushes to the main branch
-  pull_request:  # Run build & test on every PR (approval/deploy are skipped)
+      - main  # Trigger CI on pushes to main. PRs are handled by pr.yml.
 
 
 # Suppress Node deprecation warnings (e.g. punycode DEP0040) in the logs.
