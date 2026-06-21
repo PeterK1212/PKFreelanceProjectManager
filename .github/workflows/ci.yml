@@ -66,9 +66,8 @@ jobs:
       working-directory: ./ci-build/frontend
       env:
         CI: true
-      # --silent mutes test console output (act/router warnings); failures and
-      # the pass/fail summary still print.
-      run: yarn test --watchAll=false --silent
+      # test:ci emits jest-results.json for the test-case report.
+      run: yarn test:ci
 
     # --- Backend: install, then test ---
     - name: Install Backend Dependencies
@@ -84,7 +83,14 @@ jobs:
         JWT_SECRET: ${{ secrets.JWT_SECRET }}
         PORT: ${{ secrets.PORT }}
       working-directory: ./ci-build/backend
-      run: npm test
+      # test:ci emits mochawesome.json for the test-case report.
+      run: npm run test:ci
+
+    # Build the comprehensive test-case table and add it to the run summary.
+    - name: Generate Test Report
+      if: always()
+      working-directory: ./ci-build
+      run: node scripts/generate-test-report.js
 
 
   # ---------------------------------------------------------------------------

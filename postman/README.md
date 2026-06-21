@@ -32,7 +32,3 @@ You can also run the whole collection with the Collection Runner (run Auth first
 | `adminEmail` / `adminPassword` | Admin credentials (synthetic) |
 | `token` / `adminToken` | JWTs captured at login |
 | `projectId` / `taskId` | Ids captured when creating |
-
-## Notes
-- Credentials in the environments are **synthetic placeholders** — change them to match accounts that exist in the target database.
-- The **test** `baseUrl` is set to the public host from the project README (`http://3.26.196.206`). Confirm the deployed backend's actual host/port/path (the API runs on port `5001` locally) and adjust if needed.
