@@ -67,7 +67,7 @@ describe('ProjectList', () => {
     expect(props.setEditingProject).toHaveBeenCalledWith(projects[0]);
   });
 
-  test('Delete calls the API and removes the project from the list', async () => {
+  test('Removes the project from the list', async () => {
     axiosInstance.delete.mockResolvedValue({});
     const props = setup();
 
