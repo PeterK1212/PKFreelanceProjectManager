@@ -148,3 +148,6 @@ jobs:
     - run: pm2 start all
 
     - run: pm2 restart all
+
+    # Show pm2 process status (backend + frontend) after deployment.
+    - run: pm2 status
