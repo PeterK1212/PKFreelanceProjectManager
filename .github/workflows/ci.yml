@@ -4,11 +4,17 @@ on:
   push:
     branches:
       - main  # Trigger CI on pushes to the main branch
+  pull_request:  # Run build & test on every PR (approval/deploy are skipped)
 
 
 jobs:
-  test:
-    name: Run Tests
+  # ---------------------------------------------------------------------------
+  # Stage 1: Build & Test
+  # Builds the frontend first and runs its tests, then installs the backend
+  # and runs its tests. A failure here stops the pipeline before approval.
+  # ---------------------------------------------------------------------------
+  build-and-test:
+    name: Build & Test
     runs-on: self-hosted
 
     strategy:
@@ -19,8 +25,12 @@ jobs:
     environment: MONGO_URI
 
     steps:
+    # Check out into an isolated path so CI never touches the live deployment
+    # files (the runner's default workspace is what pm2 serves/runs).
     - name: Checkout Code
       uses: actions/checkout@v3
+      with:
+        path: ci-build
 
     # Set up Node.js
     - name: Setup Node.js
@@ -34,21 +44,80 @@ jobs:
         MONGO_URI: ${{ secrets.MONGO_URI }}
         JWT_SECRET: ${{ secrets.JWT_SECRET }}
         PORT: ${{ secrets.PORT }}
-      run: | 
+      run: |
         echo "Secret 1 is: $MONGO_URI"
         echo "Secret 2 is: $JWT_SECRET"
         echo "Secret 3 is: $PORT"
-      
+
+    # --- Frontend: build first, then test ---
+    - name: Install Frontend Dependencies & Build
+      working-directory: ./ci-build/frontend
+      run: |
+        df -h
+        sudo rm -rf ./build
+        yarn install
+        yarn run build
+
+    - name: Run Frontend Tests
+      working-directory: ./ci-build/frontend
+      env:
+        CI: true
+      run: yarn test --watchAll=false
+
+    # --- Backend: install, then test ---
+    - name: Install Backend Dependencies
+      working-directory: ./ci-build/backend
+      run: |
+       npm install --global yarn
+       yarn --version
+       yarn install
+
+    - name: Run Backend Tests
+      env:
+        MONGO_URI: ${{ secrets.MONGO_URI }}
+        JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        PORT: ${{ secrets.PORT }}
+      working-directory: ./ci-build/backend
+      run: npm test
+
+
+  # ---------------------------------------------------------------------------
+  # Stage 2: Deploy
+  # Runs only on pushes to main (skipped on PRs). Reproduces the runtime
+  # environment on a fresh checkout (install + build), writes the backend
+  # .env, and (re)starts pm2.
+  # ---------------------------------------------------------------------------
+  deploy:
+    name: Deploy
+    needs: build-and-test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: self-hosted
+
+    strategy:
+      matrix:
+        node-version: [22]
+
+    environment: MONGO_URI
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+
     - run: pm2 stop all || true
 
     # Install dependencies for backend
     - name: Install Backend Dependencies
       working-directory: ./backend
-      run: | 
+      run: |
        npm install --global yarn
        yarn --version
        yarn install
-      
+
     # Install dependencies for frontend
     - name: Install Frontend Dependencies
       working-directory: ./frontend
@@ -58,19 +127,8 @@ jobs:
         yarn install
         yarn run build
 
-
-    # Run backend tests
-    - name: Run Backend Tests
-      env:
-        MONGO_URI: ${{ secrets.MONGO_URI }}
-        JWT_SECRET: ${{ secrets.JWT_SECRET }}
-        PORT: ${{ secrets.PORT }}
-      working-directory: ./backend
-      run: npm test
-
-
     - run: npm ci
-    - run: | 
+    - run: |
         cd ./backend
         touch .env
         echo "${{ secrets.PROD }}" > .env
