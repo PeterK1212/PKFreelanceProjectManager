@@ -7,6 +7,11 @@ on:
   pull_request:  # Run build & test on every PR (approval/deploy are skipped)
 
 
+# Suppress Node deprecation warnings (e.g. punycode DEP0040) in the logs.
+env:
+  NODE_NO_WARNINGS: '1'
+
+
 jobs:
   # ---------------------------------------------------------------------------
   # Stage 1: Build & Test
@@ -28,13 +33,13 @@ jobs:
     # Check out into an isolated path so CI never touches the live deployment
     # files (the runner's default workspace is what pm2 serves/runs).
     - name: Checkout Code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         path: ci-build
 
     # Set up Node.js
     - name: Setup Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
 
@@ -62,7 +67,9 @@ jobs:
       working-directory: ./ci-build/frontend
       env:
         CI: true
-      run: yarn test --watchAll=false
+      # --silent mutes test console output (act/router warnings); failures and
+      # the pass/fail summary still print.
+      run: yarn test --watchAll=false --silent
 
     # --- Backend: install, then test ---
     - name: Install Backend Dependencies
@@ -101,10 +108,10 @@ jobs:
 
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Setup Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
 
