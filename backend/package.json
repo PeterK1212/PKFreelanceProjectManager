@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "mocha",
+    "test:ci": "mocha --reporter mochawesome --reporter-options reportDir=mochawesome-report,reportFilename=mochawesome,html=false,json=true,quiet=false",
     "start": "node server.js",
     "dev": "nodemon server.js",
     "prod": "node server.js"
@@ -23,6 +24,7 @@
   "devDependencies": {
     "esm": "^3.2.25",
     "mocha": "^11.0.1",
+    "mochawesome": "^7.1.4",
     "nodemon": "^2.0.15",
     "sinon": "^19.0.5"
   },

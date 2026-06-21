@@ -8,6 +8,10 @@
 # testing
 /coverage
 
+# generated test reports (intermediate JSON; docs/TEST-CASES.md is committed)
+backend/mochawesome-report/
+frontend/jest-results.json
+
 # production
 /build
 

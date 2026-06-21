@@ -18,6 +18,10 @@ Tokens and ids are captured automatically into collection variables:
 4. **Tasks → Create Task** → stores `taskId`; then Update / Delete reuse it.
 5. **Admin** requests use `adminToken`. The "forbidden for non-admin" request asserts a `403` using the freelancer `token` (verifies the Proxy/admin guard).
 
+Negative tests covering the auth guards:
+- **Auth → Get Profile (no token → 401)** — verifies the `protect` middleware rejects unauthenticated requests.
+- **Admin → Get All Projects (forbidden for non-admin)** — verifies the `admin`/Proxy guard returns `403`.
+
 You can also run the whole collection with the Collection Runner (run Auth first, or run the folders in order).
 
 ## Environment variables
@@ -28,7 +32,3 @@ You can also run the whole collection with the Collection Runner (run Auth first
 | `adminEmail` / `adminPassword` | Admin credentials (synthetic) |
 | `token` / `adminToken` | JWTs captured at login |
 | `projectId` / `taskId` | Ids captured when creating |
-
-## Notes
-- Credentials in the environments are **synthetic placeholders** — change them to match accounts that exist in the target database.
-- The **test** `baseUrl` is set to the public host from the project README (`http://3.26.196.206`). Confirm the deployed backend's actual host/port/path (the API runs on port `5001` locally) and adjust if needed.
